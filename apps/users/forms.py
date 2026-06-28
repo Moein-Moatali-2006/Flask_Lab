@@ -1,7 +1,8 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, EmailField, PasswordField, BooleanField, SubmitField
-from wtforms.validators import DataRequired, Length, EqualTo
-
+from wtforms.validators import DataRequired, Length, EqualTo, ValidationError
+from apps.extentions import db
+from apps.users.models import User
 
 class RegisteratinForm(FlaskForm):
     username = StringField("Username", validators=[DataRequired(), Length(min=4, max=25)])
@@ -9,6 +10,11 @@ class RegisteratinForm(FlaskForm):
     password = PasswordField("Pasword", validators=[DataRequired()])
     confirm_password = PasswordField("Confirm password", validators=[DataRequired(), EqualTo("password")])
     submit = SubmitField("Register")
+
+    def validate_email(self, email):
+        user = db.session.execute(db.Select(User).where(User.email==email.data)).scalar()
+        if user:
+            raise ValidationError("This email already exists..!") 
 
 
 class LoginForm(FlaskForm):

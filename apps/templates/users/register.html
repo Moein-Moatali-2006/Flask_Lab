@@ -1,7 +1,10 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <form action="" method="post">
+
+        {% include "form_errors.html" %}
+
+    <form action="" method="post" novalidate>
         {{ form.csrf_token }}
         {{ form.username.label(class="form-control-label") }}  {{ form.username(class="form-control") }}
         {{ form.email.label(class="form-control-label") }}  {{ form.email(class="form-control") }}
