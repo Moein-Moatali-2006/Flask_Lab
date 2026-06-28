@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template
 from apps.users.forms import RegisteratinForm, LoginForm
+from apps.users.models import User
 
 
 blueprint = Blueprint("users", __name__)

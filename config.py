@@ -9,9 +9,9 @@ class Config:
 
 class ProdConfig(Config):
     DEBUG = False
-    SQLALCHEMY_DATABASE_URL = ... # ellipsis
+    SQLALCHEMY_DATABASE_URI = ... # ellipsis
 
 
 class DevConfig(Config):
     DEBUG = True
-    SQLALCHEMY_DATABASE_URL = "sqlite:///" + os.path.join(Config.BASE_DIR, "project.db")
+    SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(Config.BASE_DIR, "project.db")
