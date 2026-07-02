@@ -7,7 +7,7 @@ from flask_login import UserMixin
 
 @login_manager.user_loader
 def user_loader(user_id):
-    return db.session.execute(db.select(User).where(User.id == user_id))
+    return db.session.execute(db.select(User).where(User.id == user_id)).scalar()
 
 
 class User(BaseModel, UserMixin):

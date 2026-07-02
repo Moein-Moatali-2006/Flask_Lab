@@ -1,8 +1,8 @@
-from flask import Blueprint, render_template, redirect, url_for, flash
+from flask import Blueprint, render_template, redirect, url_for, flash, request
 from apps.users.forms import RegisteratinForm, LoginForm
 from apps.users.models import User
 from apps.extentions import db, hashing
-from flask_login import login_user
+from flask_login import login_user, current_user, logout_user, login_required
 
 
 blueprint = Blueprint("users", __name__)
@@ -21,11 +21,21 @@ def register():
 
 @blueprint.route("/login", methods=["GET", "POST"])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for("home.home"))
     form = LoginForm()
     if form.validate_on_submit():
         user = db.session.execute(db.select(User).where(User.email == form.email.data)).scalar()
         if user and hashing.check_value(user.password, form.password.data):
             login_user(user, remember=form.remember.data)
             flash("You logged in successfully..!", "success")
-            return redirect(url_for("home.home"))
+            next_page = request.args.get("next")
+            return redirect(next_page if next_page else url_for("home.home"))
     return render_template("users/login.html", form=form)
+
+@blueprint.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    flash("You loged out successfuly", "success")
+    return redirect(url_for("home.home"))
