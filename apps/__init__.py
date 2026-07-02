@@ -2,8 +2,8 @@ from flask import Flask
 from apps.users.routes import blueprint as users_blueprint
 from apps.posts.routes import blueprint as posts_blueprint
 from apps.home.routes import blueprint as home_blueprint
-from apps.extentions import db, hashing
-import apps.exceptions as app_exception 
+from apps.extentions import db, hashing, login_manager
+import apps.exceptions as app_exception
 
 
 def register_blueprints(app):
@@ -28,4 +28,4 @@ with app.app_context(): db.create_all()
 
 hashing.init_app(app)
 
-
+login_manager.init_app(app)

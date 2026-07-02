@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, redirect, url_for, flash
 from apps.users.forms import RegisteratinForm, LoginForm
 from apps.users.models import User
 from apps.extentions import db, hashing
+from flask_login import login_user
 
 
 blueprint = Blueprint("users", __name__)
@@ -18,7 +19,13 @@ def register():
         return redirect(url_for("home.home"))
     return render_template("users/register.html", form=form)
 
-@blueprint.route("/login")
+@blueprint.route("/login", methods=["GET", "POST"])
 def login():
     form = LoginForm()
+    if form.validate_on_submit():
+        user = db.session.execute(db.select(User).where(User.email == form.email.data)).scalar()
+        if user and hashing.check_value(user.password, form.password.data):
+            login_user(user, remember=form.remember.data)
+            flash("You logged in successfully..!", "success")
+            return redirect(url_for("home.home"))
     return render_template("users/login.html", form=form)
