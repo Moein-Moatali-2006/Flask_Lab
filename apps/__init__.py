@@ -24,6 +24,7 @@ app.config.from_object("config.DevConfig")
 
 db.init_app(app)
 from apps.users.models import User # is here due to circular_imports for db.create_all() use
+from apps.posts.models import Post
 with app.app_context(): db.create_all()
 
 hashing.init_app(app)
