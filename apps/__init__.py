@@ -16,10 +16,21 @@ def register_error_handlers(app):
     app.register_error_handler(403, app_exception.no_permission)
     app.register_error_handler(500, app_exception.server_error)
 
+def register_shell_context(app):
+    def shell_context():
+        return {
+            "db": db,
+            "User": User,
+            "Post": Post
+        }
+
+    app.shell_context_processor(shell_context)
+
 
 app = Flask(__name__)
 register_blueprints(app)
 register_error_handlers(app)
+register_shell_context(app)
 app.config.from_object("config.DevConfig")
 
 
@@ -34,3 +45,13 @@ login_manager.init_app(app)
 login_manager.login_view = "users.login"
 login_manager.login_message = "Please login first."
 login_manager.login_message_category = "info"
+
+@app.before_request
+def befor_request():
+    print("This is befor any request..!")
+
+@app.after_request
+def after_request(response):
+    print("This is after any request..!")
+    print(response)
+    return response
