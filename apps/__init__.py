@@ -4,6 +4,7 @@ from apps.posts.routes import blueprint as posts_blueprint
 from apps.home.routes import blueprint as home_blueprint
 from apps.extentions import db, hashing, login_manager
 import apps.exceptions as app_exception
+from flask_migrate import Migrate
 
 
 def register_blueprints(app):
@@ -37,7 +38,8 @@ app.config.from_object("config.DevConfig")
 db.init_app(app)
 from apps.users.models import User # is here due to circular_imports for db.create_all() use
 from apps.posts.models import Post
-with app.app_context(): db.create_all()
+# with app.app_context(): db.create_all()
+migrate = Migrate(app, db)
 
 hashing.init_app(app)
 

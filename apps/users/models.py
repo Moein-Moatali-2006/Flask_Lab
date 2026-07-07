@@ -1,6 +1,6 @@
 from apps.database import BaseModel
 from apps.extentions import db, login_manager
-from sqlalchemy import String
+from sqlalchemy import String, Integer
 from sqlalchemy.orm import mapped_column, relationship
 from flask_login import UserMixin
 
@@ -15,6 +15,7 @@ class User(BaseModel, UserMixin):
     email = mapped_column(String(80), unique=True, nullable=False)
     password = mapped_column(String(256), nullable=False)
     posts = relationship("Post", cascade="all, delete", backref="author")
+    age = mapped_column(Integer)
 
     def __repr__(self):
         return f"{self.__class__.__name__} ({self.id}, {self.username})"
