@@ -13,6 +13,7 @@ def register_blueprints(app):
 
 def register_error_handlers(app):
     app.register_error_handler(404, app_exception.page_not_found)
+    app.register_error_handler(403, app_exception.no_permission)
     app.register_error_handler(500, app_exception.server_error)
 
 

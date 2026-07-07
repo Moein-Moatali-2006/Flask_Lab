@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    {% if post.author == current_user %}
+        <a href=" {{url_for('posts.delete', post_id=post.id)}} " class="btn btn-danger">Delete</a>
+        <a href=" {{url_for('posts.update', post_id=post.id)}} " class="btn btn-info">Update</a>
+    {% endif %}
+
+    <h3> {{ post.title }} </h3>
+    <small> {{ post.author.username|upper }} - {{ post.created_at.strftime("%Y-%m-%d") }} </small> <hr>
+    <p> {{ post.body }} </p>
+{% endblock %}

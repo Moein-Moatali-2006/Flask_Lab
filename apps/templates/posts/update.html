@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    {% include "form_errors.html" %}
+
+    <form action="" method="post" novalidate>
+        {{ form.csrf_token }}
+        {{ form.title.label(class="form-control-label") }}  {{ form.title(class="form-control") }}
+        {{ form.body.label(class="form-control-label") }}  {{ form.body(class="form-control") }}
+        <br>
+        <input type="submit" value="Update" class="btn btn-info">
+    </form>
+{% endblock %}
