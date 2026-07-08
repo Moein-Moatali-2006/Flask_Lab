@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request
-from apps.users.forms import RegisteratinForm, LoginForm, UpdateProfileForm
-from apps.users.models import User
+from apps.users.forms import RegisteratinForm, LoginForm, UpdateProfileForm, FollowForm
+from apps.users.models import User, Follow
 from apps.extentions import db, hashing
 from flask_login import login_user, current_user, logout_user, login_required
 
@@ -58,3 +58,50 @@ def profile():
         form.username.data = current_user.username
         form.email.data = current_user.email
     return render_template("users/profile.html", form=form)
+
+
+@blueprint.route("/user/<int:user_id>")
+def user_profile(user_id):
+    user = db.get_or_404(User, user_id)
+    form = FollowForm()
+    following = False
+    relation = db.session.execute(db.select(Follow).where(Follow.follower==current_user.id,
+                                                          Follow.followed==user.id)).first()
+    if relation:
+        following = True
+    return render_template("users/user_profile.html", user=user, form=form, following=following)
+
+
+@blueprint.route("/follow/<int:user_id>", methods=["POST"])
+@login_required
+def follow(user_id):
+    form = FollowForm()
+    if form.validate_on_submit():
+        user = db.get_or_404(User, user_id)
+        if user == current_user:
+            flash("You can not follow yourself..!", "info")
+            return redirect(url_for("home.home"))
+        relation = Follow(follower=current_user.id, followed=user.id)
+        db.session.add(relation)
+        db.session.commit()
+        flash(f"You followed {user.email}..!", "success")
+        return redirect(url_for("users.user_profile", user_id=user.id))
+    return redirect(url_for("home.home"))
+
+
+@blueprint.route("/unfollow/<int:user_id>", methods=["POST"])
+@login_required
+def unfollow(user_id):
+    form = FollowForm()
+    if form.validate_on_submit():
+        user = db.get_or_404(User, user_id)
+        if user == current_user:
+            flash("You can not unfollow yourself..!")
+            return redirect(url_for("home.home", "info"))
+        relation = db.session.execute(db.select(Follow).where(Follow.follower==current_user.id,
+                                                              Follow.followed==user.id)).scalar()
+        db.session.delete(relation)
+        db.session.commit()
+        flash(f"You unfollowed {user.email}..!", "success")
+        return redirect(url_for("users.user_profile", user_id=user.id))
+    return redirect(url_for("home.home"))

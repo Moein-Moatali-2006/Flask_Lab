@@ -8,6 +8,6 @@
     {% endif %}
 
     <h3> {{ post.title }} </h3>
-    <small> {{ post.author.username|upper }} - {{ post.created_at.strftime("%Y-%m-%d") }} </small> <hr>
+    <small> <a href="{{ url_for('users.user_profile', user_id=post.author.id) }}">{{ post.author.username|upper }}</a> - {{ post.created_at.strftime("%Y-%m-%d") }} </small> <hr>
     <p> {{ post.body }} </p>
 {% endblock %}

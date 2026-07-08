@@ -34,3 +34,7 @@ class UpdateProfileForm(FlaskForm):
             user = db.session.execute(db.Select(User).where(User.email==email.data)).scalar()
             if user:
                 raise ValidationError("This email already exists..!") 
+            
+
+class FollowForm(FlaskForm):
+    submit = SubmitField("submit")

@@ -15,7 +15,12 @@ class User(BaseModel, UserMixin):
     email = mapped_column(String(80), unique=True, nullable=False)
     password = mapped_column(String(256), nullable=False)
     posts = relationship("Post", cascade="all, delete", backref="author")
-    age = mapped_column(Integer)
+    # age = mapped_column(Integer)
 
     def __repr__(self):
         return f"{self.__class__.__name__} ({self.id}, {self.username})"
+
+
+class Follow(BaseModel):
+    follower = mapped_column(Integer)
+    followed = mapped_column(Integer)
