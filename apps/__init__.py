@@ -2,7 +2,8 @@ from flask import Flask
 from apps.users.routes import blueprint as users_blueprint
 from apps.posts.routes import blueprint as posts_blueprint
 from apps.home.routes import blueprint as home_blueprint
-from apps.extentions import db, hashing, login_manager
+from apps.users.api_routes import blueprint as users_api_blueprint
+from apps.extentions import db, hashing, login_manager, jwt
 import apps.exceptions as app_exception
 from flask_migrate import Migrate
 
@@ -11,6 +12,7 @@ def register_blueprints(app):
     app.register_blueprint(users_blueprint)
     app.register_blueprint(posts_blueprint)
     app.register_blueprint(home_blueprint)
+    app.register_blueprint(users_api_blueprint)
 
 def register_error_handlers(app):
     app.register_error_handler(404, app_exception.page_not_found)
@@ -36,12 +38,13 @@ app.config.from_object("config.DevConfig")
 
 
 db.init_app(app)
-from apps.users.models import User, Follow # is here due to circular_imports for db.create_all() use
+from apps.users.models import User, Follow, Code # is here due to circular_imports for db.create_all() use
 from apps.posts.models import Post
 # with app.app_context(): db.create_all()
 migrate = Migrate(app, db)
 
 hashing.init_app(app)
+jwt.init_app(app)
 
 login_manager.init_app(app)
 login_manager.login_view = "users.login"

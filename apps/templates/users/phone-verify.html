@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    {% include "form_errors.html" %}
+
+    <form action="" method="post" novalidate>
+        {{ form.csrf_token }}
+        {{ form.code.label(class="form-control-label") }}  {{ form.code(class="form-control") }}
+        <input type="submit" value="register">
+    </form>
+{% endblock %}
