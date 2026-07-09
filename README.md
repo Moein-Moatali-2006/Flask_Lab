@@ -72,8 +72,8 @@ http://127.0.0.1:5000
 
 ## Screenshots
 
-![]()
-![]()
+![](https://github.com/Moein-Moatali-2006/Flask_Lab/blob/main/apps/img/home.png)
+![](https://github.com/Moein-Moatali-2006/Flask_Lab/blob/main/apps/img/profile.png)
 
 
 ## License
